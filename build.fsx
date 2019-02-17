@@ -14,6 +14,8 @@ open FPublisher.Git
 open Fake.DotNet
 open System.Reflection
 open System
+open Fake.SystemHelper
+
 
 let buildServer =
     BuildServer.create
@@ -21,7 +23,9 @@ let buildServer =
             with
                 LocalNugetServer = Some LocalNugetServer.DefaultValue
                 LoggerLevel = Logger.Level.Normal }
+let env = Environment.environVarOrFail "nuget_api_token"
 
+Trace.tracefn "Nuget Token is %s" env
 
 Target.create "Workspace.CreateDefaultSln" <| fun _ ->
     Workspace.createDefaultSln false buildServer.Collaborator.Workspace
